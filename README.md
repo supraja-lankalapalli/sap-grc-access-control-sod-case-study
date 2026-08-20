@@ -1,221 +1,150 @@
-# SAP GRC Access Control & SoD Case Study
+# SAP GRC Access Control — Segregation of Duties Case Study
 
 ## About This Project
 
-I built this project to get hands-on experience with how SAP access is reviewed from a security and GRC perspective.
+I built this project to work through an SAP access-control case from role design to SoD risk treatment instead of looking at GRC only from the risk-analysis screen.
 
-My goal was not just to create roles or run a risk report. I wanted to follow the access lifecycle and understand what happens after a user receives access:
+The case follows a user who requires Accounts Payable access for invoice and payment processing. I created the required access through separate roles, maintained the authorizations, synchronized the access with the user, and then analyzed the user's effective access in SAP GRC.
 
-**What access does the user have?  
-Does that access create a Segregation of Duties risk?  
-What exactly is causing the conflict?  
-Should the access be removed, redesigned, or controlled?**
+The GRC analysis identified an active Segregation of Duties risk. From there, I traced the finding to the functions behind the conflict and documented how I would treat the access based on business need and least privilege.
 
-For this case study, I worked with SAP role and authorization configuration and then used SAP GRC Access Control to analyze the access assigned to a test user.
+The project covers the full path:
 
-During the analysis, SAP GRC identified an active SoD risk for the user. I investigated the risk, reviewed the conflicting functions and actions, evaluated the access from a security perspective, and reviewed how mitigating controls are structured when conflicting access must be retained.
+**Access requirement → Role design → Authorization configuration → User provisioning → GRC risk analysis → Risk investigation → Risk treatment**
 
 ---
 
 ## Case Scenario
 
-The test user used in this project was:
+The access requirement involved two Accounts Payable activities:
 
-**User:** `BEST1`
+- entering incoming invoices
+- processing automatic payments
 
-The user had SAP access that needed to be reviewed from both an authorization and an SoD perspective.
+Instead of combining both activities into one role, I maintained them separately:
 
-Before performing the GRC analysis, I worked with the supporting SAP Security configuration, including:
+| Role | Access |
+|---|---|
+| `Z_AP_INVOICE_PROCESSOR` | `FB60 — Enter Incoming Invoices` |
+| `Z_AP_PAYMENT_PROCESSOR` | `F110 — Parameters for Automatic Payment` |
 
-- PFCG role configuration
-- Authorization maintenance
-- Organizational-level restrictions
-- Authorization profile generation
-- User-role assignment
-- User comparison
+The roles were then synchronized with the user master and reviewed through SAP GRC at the user level.
 
-After the access was available to the user, I moved to SAP GRC Access Control to analyze the user's effective access.
-
-The purpose was to determine whether individually assigned permissions created a security risk when combined.
+This allowed the case to move beyond simply checking whether a transaction was available. The important part was understanding what the user's combined access looked like once GRC evaluated it against the configured rule set.
 
 ---
 
 ## What I Worked On
 
-### 1. SAP Role and Authorization Review
+### 01 — Access Request
 
-I worked with SAP roles in PFCG and reviewed how business access is translated into technical authorizations.
+The case started by defining the required AP access and separating invoice processing from payment processing.
 
-I maintained the required authorization data and organizational restrictions instead of leaving the access unrestricted.
+The access requirement was translated into role-level access that could be configured and reviewed independently.
 
-I also generated the authorization profile, assigned the required access to the test user, and completed the user comparison so that the user master reflected the role assignment.
-
-This gave me the access baseline that I later analyzed through SAP GRC.
+[View Access Request](01-access-request/access-request.md)
 
 ---
 
-### 2. User-Level Access Risk Analysis
+### 02 — Authorization Configuration
 
-I then performed a **User Level Access Risk Analysis** in SAP GRC Access Control.
+The required access was configured through SAP role maintenance.
 
-I analyzed:
+The authorization structure was reviewed so the role contained the access needed for the assigned responsibility rather than relying only on the transaction appearing in the role menu.
+
+This part of the project connected the business access requirement to the SAP authorization layer behind it.
+
+[View Authorization Configuration](02-authorization-configuration/authorization-configuration.md)
+
+---
+
+### 03 — User Provisioning
+
+After the role configuration was completed, user comparison was performed so the access was reflected in the user master.
+
+The payment-processing access was maintained separately through:
+
+`Z_AP_PAYMENT_PROCESSOR`
+
+with:
+
+`F110 — Parameters for Automatic Payment`
+
+User comparison was completed after the role changes to synchronize the updated access.
+
+At this point the roles were technically configured and available to the user, but that alone did not establish that the combined access was acceptable from an SoD perspective.
+
+[View User Provisioning](03-user-provisioning/user-provisioning.md)
+
+---
+
+### 04 — SoD Risk Analysis
+
+The next step was to analyze the user's effective access in SAP GRC.
+
+The User-Level Access Risk Analysis was run for:
 
 **User:** `BEST1`  
-**Rule Set:** `GLOBAL`  
-**Analysis:** Access Risk Analysis
+**Rule Set:** `GLOBAL`
 
-The purpose of this step was to check whether the user's combined access violated any configured GRC risk rules.
+The analysis returned:
 
-The analysis identified an active SoD risk.
-
----
-
-## SoD Finding
-
-The main risk identified during my analysis was:
-
-| Risk Detail | Result |
+| Field | Result |
 |---|---|
 | Risk ID | `B001` |
-| Risk Type | Segregation of Duties |
 | Risk Level | Medium |
-| Status | Active |
-| Conflicting Function | Basis Development |
-| Conflicting Function | System Administration |
+| Risk Type | Segregation of Duties |
+| Business Process | Basis |
 
-The result also showed multiple rule and action combinations associated with B001.
+The result also contained multiple rule and action combinations under the same risk.
 
-This was an important part of the project for me because it showed the difference between simply reviewing a user's roles and actually analyzing the risk created by the user's combined access.
+Instead of treating the result as a simple pass/fail check, I reviewed the action-level output to understand what access was contributing to the finding.
 
-A user may have valid access to individual functions, but the combination of those functions can still create an SoD exposure.
-
----
-
-## Investigating the Risk
-
-I did not treat the GRC result as an automatic decision to remove access.
-
-I reviewed the B001 finding at the rule and action level to understand what SAP GRC was actually identifying.
-
-My investigation focused on:
-
-- the conflicting functions
-- the associated rule IDs
-- the actions involved in the conflict
-- the user's existing access
-- whether the conflicting access was necessary
-- the security impact of keeping both capabilities
-
-This is where I approached the result as an access-control case rather than just a GRC report.
-
-The main question became:
-
-> **Does BEST1 really need both sides of this access?**
-
-If the answer is no, the unnecessary access should be removed or redesigned.
-
-If both capabilities are required for a valid business reason, the risk needs additional control and oversight.
+[View SoD Risk Analysis](04-sod-risk-analysis/sod-risk-analysis.md)
 
 ---
 
-## Remediation Decision
+### 05 — Risk Investigation
 
-My first choice for an SoD conflict is remediation whenever the business requirement allows it.
+After identifying B001, I opened the risk definition and traced the finding to the two functions configured in the conflict:
 
-For B001, the remediation approach is:
+- `BS02 — Basis Development`
+- `BS11 — System Administration`
 
-1. Identify the access contributing to the conflicting capability.
-2. Confirm whether that access is required for the user's job.
-3. Remove or redesign unnecessary access.
-4. Maintain least privilege instead of accepting excessive access.
-5. Re-run the GRC analysis after the access change.
+This was an important part of the analysis because the user-level result showed the risk, while the risk definition showed what GRC was actually evaluating underneath it.
 
-I would not remove access only because GRC generated a violation.
+The review confirmed that the finding was being triggered by the combination of these capabilities within the same access context.
 
-The business requirement and the security risk both need to be considered before making the final decision.
+Rather than treating every action returned by GRC as something that should automatically be removed, I used the function and action-level details to understand where the conflict was coming from and what would need to be addressed.
 
----
-
-## Mitigating Control Review
-
-I also reviewed an existing mitigating control in SAP GRC to understand how a compensating control is structured when conflicting access cannot be removed.
-
-The control I reviewed included separate responsibilities for approval and monitoring.
-
-| Responsibility | User ID |
-|---|---|
-| Mitigation Approver | `G_MIT_APP_01` |
-| Mitigation Monitor | `G_MIT_MON_01` |
-
-I also reviewed the control's organization, security process, subprocess, and owner assignments.
-
-This helped me understand an important difference:
-
-**Remediation changes the user's access.**
-
-**Mitigation allows necessary conflicting access to remain, but places additional monitoring and accountability around the risk.**
-
-I would use mitigation only when there is a valid business reason for retaining the conflicting access and an appropriate compensating control exists.
+[View Risk Investigation](05-risk-investigation/risk-investigation.md)
 
 ---
 
-## My Access Decision
+### 06 — Risk Treatment
 
-For this case, I would not automatically approve BEST1 with the identified B001 conflict.
+Once the conflict was understood, the final step was deciding how the access should be handled.
 
-My decision would depend on whether both conflicting capabilities are actually required.
+Where conflicting access is not required, remediation is the preferred treatment. The unnecessary access should be removed or redesigned, followed by user synchronization and another GRC analysis to validate the result.
 
-### If both capabilities are not required
+Where both capabilities are required for a valid business reason, removing access only to clear the GRC finding would not be the right decision. In that situation, the remaining risk should be handled through an appropriate mitigating control with documented justification, independent approval, monitoring, evidence, and periodic review.
 
-I would remediate the access by removing or redesigning the unnecessary authorization and then perform another GRC risk analysis.
-
-### If both capabilities are required
-
-I would require a formally approved mitigating control with:
-
-- a clearly defined control
-- an independent approver
-- an assigned monitor
-- defined monitoring responsibility
-- appropriate validity dates
-- documented evidence
-
-The risk should be understood and controlled before the conflicting access is accepted.
-
----
-
-## Project Flow
+For this case, the treatment logic is:
 
 ```text
-Business Access Requirement
-          |
-          v
-SAP Role & Authorization Configuration
-          |
-          v
-User Access Assignment
-          |
-          v
-SAP GRC User-Level Risk Analysis
-          |
-          v
-B001 SoD Risk Identified
-          |
-          v
-Rule & Action Investigation
-          |
-          v
-Is All Conflicting Access Required?
-        /     \
-      No       Yes
-      |         |
-      v         v
- Remediate   Evaluate
-   Access    Mitigation
-      \         /
-       \       /
-          v
-   Access Decision
-          |
-          v
-     Evidence
+B001 Confirmed
+      ↓
+Review Required Access
+      ↓
+ ┌───────────────┴───────────────┐
+ │                               │
+Access Not Required       Both Capabilities Required
+ │                               │
+ ↓                               ↓
+Remediate                     Mitigate
+ │                               │
+ ↓                               ↓
+Re-run GRC              Monitor and Review
+ └───────────────┬───────────────┘
+                 ↓
+         Controlled Access
