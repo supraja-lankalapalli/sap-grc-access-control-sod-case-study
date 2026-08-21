@@ -11,7 +11,7 @@ B001 was configured as a Segregation of Duties risk between:
 
 ### Evidence
 
-![B001 Risk Detail](evidence/E10_B001_Risk_Detail.png)
+![B001 Risk Detail](evidence/E10_SoD_Risk_B001_Detail_Conflicting_Functions.png)
 
 *B001 risk definition showing the conflict between Basis Development and System Administration.*
 
@@ -35,15 +35,15 @@ If both functions were required, the conflict would still remain and would need 
 
 ## Access Review
 
-The B001 finding was traced from the user-level result to the two functions defined in the risk:
+The B001 finding was traced across both the detailed user-level result and the risk definition.
+
+The detailed analysis showed the rule, function, action, and Role/Profile information associated with `BEST1`, while the risk definition confirmed the two functions configured in B001:
 
 - `BS02 - Basis Development`
 - `BS11 - System Administration`
 
-The review confirmed that the risk was being triggered by the combination of these capabilities within the same access context.
+Together, these results confirmed that B001 was being triggered by development-related and system-administration capabilities present in the user's effective access.
 
-Rather than treating the GRC result as a transaction-removal list, I used the function and action-level details to separate the access that required further review from the access that could remain justified.
+I did not treat the GRC output as a transaction-removal list. The access still needs to be evaluated against the user's actual responsibilities before deciding what should be removed, redesigned, or retained under additional control.
 
-This narrowed the treatment to two practical options: remove or redesign unnecessary conflicting access, or retain justified access under an appropriate mitigating control.
-
-B001 was therefore carried forward as a confirmed SoD finding requiring risk treatment before the access could be considered acceptable.
+At this point, B001 was a confirmed SoD finding with enough technical detail to move into a risk-treatment decision.

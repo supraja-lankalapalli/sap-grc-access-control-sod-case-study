@@ -52,11 +52,9 @@ The underlying SoD conflict would still exist. Mitigation would provide the over
 
 ## Final Decision
 
-For `BEST1`, remediation is the first choice where the conflicting access is not required.
+For `BEST1`, remediation is the preferred treatment where conflicting access is not required.
 
-If both capabilities are justified, the access can remain only with appropriate approval, monitoring, and control evidence.
-
-The final treatment is therefore:
+If both capabilities are justified by the user's responsibilities, the access should remain only with documented approval, an appropriate mitigating control, independent monitoring, and periodic review.
 
 ```text
 B001 - Basis Development + System Administration
@@ -78,3 +76,8 @@ B001 - Basis Development + System Administration
         └────────────┬────────────┘
                      ↓
              Controlled Access
+```
+
+The treatment decision remains tied to the user's actual access requirement. Unnecessary access should be removed; justified conflicting access should remain visible, owned, and monitored.
+
+No completed remediation or mitigation is claimed in this case because the captured evidence supports the analysis and treatment decision, not a post-treatment implementation.

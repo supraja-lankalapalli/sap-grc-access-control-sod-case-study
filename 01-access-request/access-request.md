@@ -50,8 +50,13 @@ I kept the role focused on invoice-processing activity rather than adding unrela
 
 ## Role Design
 
-The role design at this point was:
+The invoice-processing access was kept focused on the required business activity:
 
 ```text
 Z_AP_INVOICE_PROCESSOR
-|--- FB60 - Enter Incoming Invoices
+└── FB60 - Enter Incoming Invoices
+```
+
+Payment processing was intentionally maintained separately rather than adding it to the same role.
+
+This kept the role design clear and provided a controlled starting point for the authorization configuration in the next stage.

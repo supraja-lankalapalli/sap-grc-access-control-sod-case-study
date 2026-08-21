@@ -18,7 +18,7 @@ This limited the role to the required organizational scope instead of allowing u
 
 ### Evidence
 
-![Organizational Levels](evidence/E03_Organizational_Levels.png)
+![Organizational Levels](evidence/E03_Company_Code_1710_Restriction.png)
 
 *Company Code 1710 maintained as part of the organizational-level restriction for the role.*
 
@@ -34,7 +34,7 @@ I used this step to review the actual authorization scope rather than assuming t
 
 ### Evidence
 
-![Authorization Details](evidence/E04_Authorization_Details.png)
+![Authorization Details](evidence/E04_STCODE_FB03_FB60.png)
 
 *Authorization data reviewed after maintaining the role and organizational values.*
 

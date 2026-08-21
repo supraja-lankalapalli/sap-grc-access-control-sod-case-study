@@ -42,7 +42,7 @@ The comparison completed successfully, confirming that the updated access was sy
 
 ### Evidence
 
-![Payment Role User Comparison](evidence/E08_Payment_User_Comparison_Success.png)
+![Payment Role User Comparison](evidence/E08_User_Comparison_Successful.png)
 
 *Successful user comparison after the payment-processing role was maintained.*
 
@@ -59,4 +59,4 @@ The access was now separated into two roles:
 
 Both roles were configured and synchronized successfully.
 
-The next step was to check whether the user's combined access created any SoD risk in SAP GRC.
+With the SAP role configuration complete, I moved to SAP GRC to review `BEST1` at the user level. The purpose of this analysis was to identify active SoD exposure in the user's effective access and investigate any resulting risk separately from the AP role-build evidence.
