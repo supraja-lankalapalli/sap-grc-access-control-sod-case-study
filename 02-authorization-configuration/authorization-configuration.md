@@ -56,12 +56,14 @@ I confirmed that the authorization status was current after generation before mo
 
 ## Configured Access
 
-At the end of this step, the invoice-processing access was configured as:
+At the end of the authorization configuration, the role contained the required transaction access and organizational restriction:
 
 ```text
 Z_AP_INVOICE_PROCESSOR
-|
-- FB60 - Enter Incoming Invoices
-- Company Code - 1710
-- Authorization values reviewed
-- Authorization profile generated
+├── FB60 - Enter Incoming Invoices
+├── Company Code - 1710
+├── Authorization values reviewed
+└── Authorization profile generated
+```
+
+With the role configuration complete and the authorization profile generated, the next step was to synchronize the role assignment with the user master.

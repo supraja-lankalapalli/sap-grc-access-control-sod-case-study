@@ -71,22 +71,6 @@ This gave me a clearer view of how the user's effective access was being evaluat
 
 ---
 
-## Configured Access
-
-At the end of the authorization configuration, the role contained the required transaction access and organizational restriction:
-
-```text
-Z_AP_INVOICE_PROCESSOR
-├── FB60 - Enter Incoming Invoices
-├── Company Code - 1710
-├── Authorization values reviewed
-└── Authorization profile generated
-```
-
-With the role configuration complete and the authorization profile generated, the next step was to synchronize the role assignment with the user master.
-
----
-
 ## Result
 
 The user-level analysis identified `B001` as an active SoD finding for `BEST1`.
